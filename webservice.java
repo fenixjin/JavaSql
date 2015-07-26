@@ -66,7 +66,7 @@ public class sqlConnection
 
 public class DBoperation
 {
-	public int UserRegister(String username, String userpwd, String deviceID)
+	public int UserRegister(String username, String user_pwd, String deviceID)
 	{
 		//首先检查是否用户名是否已经存在
 		String presql = "select username from user_info where username = ?";
@@ -85,7 +85,7 @@ public class DBoperation
 									"values ( ? , ?, ?, ?)";
 			PreparedStatement pstmt2 = con.preparedStatement(sql_register);
 			pstmt2.setstring(1, username);
-			pstmt2.setstring(2, userpwd);
+			pstmt2.setstring(2, user_pwd);
 			pstmt2.setstring(3, 0.8);
 			pstmt2.setstring(4, deviceID);
 			pstmt2.executeNonQuery();
@@ -96,7 +96,7 @@ public class DBoperation
 		return 1;
 	}
 
-	public int UserLogin(String username, String userpwd)
+	public int UserLogin(String username, String user_pwd)
 	{
 		//首先还是查找用户名
 		String presql = "select username, password from user_info where username = ?";
@@ -121,11 +121,15 @@ public class DBoperation
 	}
 
 	/*
-		返回最近的n*10到(n+1)*10条请求信息
+		返回最近的num条请求信息
 	*/
-	public string[] RecentRequest(int n, int category)
+	public string[] RecentRequest(int times, int num, int category)
 	{
-		String presql = "select * from request "
+		String presql = "select * from (select row_number() over(order by starttime DESC) 'rn', * from request where category = ?) where rn between ? and ?";
+		PreparedStatement pstmt1 = con.preparedStatement(presql);
+		pstmt1.setstring(1, category);
+		pstmt1.setstring(2, times * m);
+		pstmt1.setstring(3, (times + 1) * m);
 	} 
 	public bool SendRequest(int starterID,
 					   String starttime,
