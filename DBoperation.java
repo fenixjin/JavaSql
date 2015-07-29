@@ -10,17 +10,17 @@ import java.sql.Statement;
 import objects.User;
 
 /**
- * 对数据库进行操作
+ * 露脭脢媒戮脻驴芒陆酶脨脨虏脵脳梅
  * @author one
  *
  */
 public class DBoperation 
 {
 	static Connection connection = new DBconnection().con; 
-	//static Statement stmt;		//这个一直都没有被用到
+	//static Statement stmt;		//脮芒赂枚脪禄脰卤露录脙禄脫脨卤禄脫脙碌陆
 	
 	/**
-	 * 注册操作
+	 * 脳垄虏谩虏脵脳梅
 	 * @param user
 	 * @return
 	 * @throws SQLException
@@ -56,7 +56,7 @@ public class DBoperation
 	}
 	
 	/**
-	 * 登录操作
+	 * 碌脟脗录虏脵脳梅
 	 * @param user
 	 * @return
 	 * @throws SQLException
@@ -64,9 +64,9 @@ public class DBoperation
 	public static String Login(User user) throws SQLException
 	{
 		/*
-		 * 首先检查用户是否输入deviceID以及deviceID是否存在于数据库
-		 *  这里的逻辑是如果设备的ID对的上的话就直接登陆，如果需要跳过ID登陆的话
-		 	直接不输入deviceID就好了
+		 * 脢脳脧脠录矛虏茅脫脙禄搂脢脟路帽脢盲脠毛deviceID脪脭录掳deviceID脢脟路帽麓忙脭脷脫脷脢媒戮脻驴芒
+		 *  脮芒脌茂碌脛脗脽录颅脢脟脠莽鹿没脡猫卤赂碌脛ID露脭碌脛脡脧碌脛禄掳戮脥脰卤陆脫碌脟脗陆拢卢脠莽鹿没脨猫脪陋脤酶鹿媒ID碌脟脗陆碌脛禄掳
+		 	脰卤陆脫虏禄脢盲脠毛deviceID戮脥潞脙脕脣
 		 */
 		if(user.deviceID != null)
 		{
@@ -89,8 +89,8 @@ public class DBoperation
 		}
 
 		/**
-		 * 检查用户名密码是否正确
-		 * 若用户名密码正确，对用户对应的设备号进行更新
+		 * 录矛虏茅脫脙禄搂脙没脙脺脗毛脢脟路帽脮媒脠路
+		 * 脠么脫脙禄搂脙没脙脺脗毛脮媒脠路拢卢露脭脫脙禄搂露脭脫娄碌脛脡猫卤赂潞脜陆酶脨脨赂眉脨脗
 		 */
 		String presql = "select * from dbo.user_info where username = ?";
 		PreparedStatement pstmt1 = connection.prepareStatement(presql);
@@ -120,7 +120,7 @@ public class DBoperation
 	}
 	
 	/**
-	 * 更新用户设备号
+	 * 赂眉脨脗脫脙禄搂脡猫卤赂潞脜
 	 * @param user
 	 * @throws SQLException
 	 */
@@ -135,7 +135,7 @@ public class DBoperation
 	}
 
 	/********************************
-	*传回最近的num条请求信息
+	*麓芦禄脴脳卯陆眉碌脛num脤玫脟毛脟贸脨脜脧垄
 	*@parameter times, num, category
 	*@throws SQLexception
 	*******************************/
@@ -157,7 +157,7 @@ public class DBoperation
 	}
 
 	/*********************************
-	*记录一条请求
+	*录脟脗录脪禄脤玫脟毛脟贸
 	*@parameter request
 	*@throws SQLException
 	**********************************/
@@ -165,25 +165,47 @@ public class DBoperation
 	{
 		String insertRequestString = "insert into request (starterID, starttime, deadline, category, description, tags, longitude, latitude)"+
 										"values (?, ?, ?, ?, ?, ?, ?, ?);";
-		PreparedStatement insertStatement = con.prepareStatement(insertRequestString);
-		insertStatement.setString(1, request.starterID);
-		insertStatement.setString(2, request.starttime);
-		insertStatement.setString(3, request.deadline);
-		insertStatement.setString(4, Integer.tostring(request.category));
-		insertStatement.setString(5, request.description);
-		insertStatement.setString(6, request.tags);
-		insertStatement.setString(7, String.valueof(request.longitude));
-		insertStatement.setString(8, String.valueof(request.starterID));
+		PreparedStatement insertRequestStatement = con.prepareStatement(insertRequestString);
+		insertRequestStatement.setString(1, request.starterID);
+		insertRequestStatement.setString(2, request.starttime);
+		insertRequestStatement.setString(3, request.deadline);
+		insertRequestStatement.setString(4, String.valueof(request.category));
+		insertRequestStatement.setString(5, request.description);
+		insertRequestStatement.setString(6, request.tags);
+		insertRequestStatement.setString(7, String.valueof(request.longitude));
+		insertRequestStatement.setString(8, String.valueof(request.starterID));
 
-		insertStatement.close();
+		insertRequestStatement.close();
 	}
 	/**********************************
-	*记录一条回应
+	*录脟脗录脪禄脤玫禄脴脫娄
 	*@param response
 	*@throws SQLException
 	*********************************/
 	public static String InsertResponse(response)
 	{
-		String InsertResponseString = "insert into response("
+		int i = 0;
+		String InsertResponseString1 = "insert into response(requestID, reliability, item_num, answererID";
+		String InsertResponseString2 = "values (";
+		while (i < response.item_num)
+		{
+			InsertResponseString1 += "itemID" + String.valueof(i) + ", ";
+			InsertResponseString2 += "?, ";
+			i++;
+		}
+		InsertResponseString1 += ")";
+		InsertResponseString2 += ")";
+		PreparedStatement insertResponseStatement = con.prepareStatement(InsertResponseString1 + InsertResponseString2);
+		i = 0;
+		while (i < response.item_num)
+		{
+			insertResponseStatement.setString(i + 1, response);
+		}
 	}
 }
+
+
+
+
+
+
