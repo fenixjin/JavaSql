@@ -193,14 +193,29 @@ public class DBoperation
 			InsertResponseString2 += "?, ";
 			i++;
 		}
+		i = 0;
+		while (i < response.item_num)
+		{
+			InsertResponseString1 += "item_score" + String.valueof(i) + ", ";
+			InsertResponseString2 += "?, ";
+			i++;
+		}
 		InsertResponseString1 += ")";
 		InsertResponseString2 += ")";
 		PreparedStatement insertResponseStatement = con.prepareStatement(InsertResponseString1 + InsertResponseString2);
 		i = 0;
 		while (i < response.item_num)
 		{
-			insertResponseStatement.setString(i + 1, response);
+			insertResponseStatement.setString(i + 1, String.toString(response.itemID[i]));
+			i++;
 		}
+		i = 0;
+		while (i < reponse.item_num)
+		{
+			insertResponseStatement.setString(i + reponse.item_num + 1, String.toStrng(response.item_score[i]));
+			i++;
+		}
+		
 	}
 }
 
